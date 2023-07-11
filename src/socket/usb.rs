@@ -51,6 +51,17 @@ impl UsbCanSocket {
             Err(_) => Err(PcanError::Unknown),
         }
     }
+
+    pub fn clear(&self) -> Result<(), PcanError> {
+        let handle = self.handle();
+        let code = unsafe { pcan::CAN_Reset(handle) };
+
+        match PcanOkError::try_from(code) {
+            Ok(PcanOkError::Ok) => Ok(()),
+            Ok(PcanOkError::Err(err)) => Err(err),
+            Err(_) => Err(PcanError::Unknown),
+        }
+    }
 }
 
 /* Drop trait implementation */
